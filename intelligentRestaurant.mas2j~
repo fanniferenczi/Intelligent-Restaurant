@@ -1,0 +1,18 @@
+/*
+    intelligentRestaurant
+    ---------------------------
+
+    Jason Project File
+
+    This file defines the initial state of the MAS
+
+    Jason 2.5.1
+    április 20, 2022 - 15:49:00
+*/
+
+MAS intelligentRestaurant {
+
+    infrastructure: Local
+
+    agents: sample_agent;
+}
