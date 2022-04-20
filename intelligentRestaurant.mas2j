@@ -14,5 +14,5 @@ MAS intelligentRestaurant {
 
     infrastructure: Local
 
-    agents: sample_agent;
+    agents: kitchen_meneger;
 }
