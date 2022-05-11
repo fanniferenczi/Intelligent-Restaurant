@@ -14,5 +14,9 @@ MAS intelligentRestaurant {
 
     infrastructure: Local
 
-    agents: sample_agent;
+    environment: RestaurantEnv(gui)
+
+    agents: robot1;robot2;meneger;
+        table1;
+
 }

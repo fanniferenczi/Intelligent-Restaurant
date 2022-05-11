@@ -1,20 +1,20 @@
 +!has(table1,order):true
 	<-/*!at(robot1,manager);*/
 	get(order);
-	!at(robot2,table1);
+	!at(robot1,table1);
 	hand_in(order);
-	!at(robot2,robot2).
+	!at(robot1,robot1).
 	
 +!has(table5,order):true
 	<-/*!at(robot1,manager);*/
 	get(order);
-	!at(robot2,table5);
+	!at(robot1,table5);
 	hand_in(order);
-	!at(robot2,robot2).
+	!at(robot1,robot1).
 	
-+!at(robot2,P):at(robot2,P)
++!at(robot1,P):at(robot1,P)
 	<- true.
 	
-+!at(robot2,P): not at(robot2,P)
-	<- move_towards(P,1);
-		!at(robot2,P).
++!at(robot1,P): not at(robot1,P)
+	<- move_towards(P);
+		!at(robot1,P).

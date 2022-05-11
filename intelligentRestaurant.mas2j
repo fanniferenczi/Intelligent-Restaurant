@@ -16,5 +16,5 @@ MAS intelligentRestaurant {
 
     environment: RestaurantEnv(gui)
 
-    agents: robot1;robot2;meneger;
+    agents: robot1;robot2;manager;table1;
 }

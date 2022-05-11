@@ -28,12 +28,12 @@ public class RestaurantModel extends GridWorldModel{
 	int counter=1;
 
     public RestaurantModel(){
-        super(GSizeX,GSizeY,3);
+        super(GSizeX,GSizeY,4);
         setAgPos(0, lRobot1);
 		setAgPos(1, lRobot2);
 		setAgPos(2, lManager);
-		/*setAgPos(3,lTable6);
-		setAgPos(3, lTable3);
+		setAgPos(3,lTable6);
+		/*setAgPos(3, lTable3);
 		setAgPos(4, lTable4);
 		setAgPos(5, lTable5);
 		setAgPos(6, lTable6);
