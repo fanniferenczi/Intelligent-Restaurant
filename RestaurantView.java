@@ -20,7 +20,7 @@ public class RestaurantView extends GridWorldView{
     @Override
     public void draw(Graphics g, int x, int y, int object){
          //itt lehetne ezt is használni: super.drawObstacle(g,x,y); <- szürke négyzet
-												// nem tudom, hogy számít-e, hogy akadályként és nem agentként van kirajzolva
+											
         switch(object){
             case RestaurantModel.TABLE1:
 			super.drawAgent(g,x,y,Color.blue,-1);

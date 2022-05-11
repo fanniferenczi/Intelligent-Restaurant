@@ -50,13 +50,13 @@ public class RestaurantModel extends GridWorldModel{
 	
 	boolean moveTowards(Location dest, int rNumber){
 		
-		Location r=getAgPos(rNumber);
+		Location r=getAgPos(rNumber); //rNumber a robotot azonosítja, annak kell az aktuális pozíciója
 		
 		if(r.x<dest.x && vertObstacle==false){
 			if(isFree(r.x+1,r.y)){
 				r.x++;
 			}
-			else{
+			else{ //ha akadály van, kerülünk, egyszer y+ irányba, egyszer y- irányba (mert be tud akadni, ha nem fordul néha vissza)
 				if(counter%2==0){
 					if(isFree(r.x,r.y+1)){
 						r.y++;
@@ -136,11 +136,11 @@ public class RestaurantModel extends GridWorldModel{
 		return true;
 	}
 
-	boolean getOrder(){
+	boolean getOrder(){  //egyelõre nem csinál sok mindent
 		carryingOrder=true;
 		return true;
 	}
-	boolean handInOrder(){
+	boolean handInOrder(){  //szintén
 		carryingOrder=false;
 		return true;
 	}
