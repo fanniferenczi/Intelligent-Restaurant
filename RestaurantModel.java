@@ -1,5 +1,10 @@
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
+import jason.asSyntax.*;
+import jason.environment.*;
+import jason.asSyntax.parser.*;
+import java.util.logging.*;
+import jason.environment.grid.Location;
 
 public class RestaurantModel extends GridWorldModel{
     public static final int TABLE1=8;
@@ -20,20 +25,24 @@ public class RestaurantModel extends GridWorldModel{
 	Location lTable5=new Location(6,6);
 	Location lTable6=new Location(5,3);
 	Location lManager=new Location(9,3);
-	Location lRobot1 = new Location(9,1);
-	Location lRobot2 = new Location(9,5);
+	Location lRobot1 = new Location(8,1);
+	Location lRobot2 = new Location(8,5);
+	Location l = new Location(8,3);
 	
 	boolean carryingOrder=false;
 	boolean vertObstacle=false;
 	int counter=1;
+	boolean right=false;
+	
+	private Logger logger = Logger.getLogger("intelligentRestaurant.mas2j."+RestaurantModel.class.getName());
 
     public RestaurantModel(){
-        super(GSizeX,GSizeY,3);
+        super(GSizeX,GSizeY,4);
         setAgPos(0, lRobot1);
 		setAgPos(1, lRobot2);
 		setAgPos(2, lManager);
-		/*setAgPos(3,lTable6);
-		setAgPos(3, lTable3);
+		setAgPos(3,lTable6);
+		/*setAgPos(3, lTable3);
 		setAgPos(4, lTable4);
 		setAgPos(5, lTable5);
 		setAgPos(6, lTable6);
@@ -51,87 +60,12 @@ public class RestaurantModel extends GridWorldModel{
 	boolean moveTowards(Location dest, int rNumber){
 		
 		Location r=getAgPos(rNumber); //rNumber a robotot azonosítja, annak kell az aktuális pozíciója
+
 		
-		if(r.x<dest.x && vertObstacle==false){
-			if(isFree(r.x+1,r.y)){
-				r.x++;
-			}
-			else{ //ha akadály van, kerülünk, egyszer y+ irányba, egyszer y- irányba (mert be tud akadni, ha nem fordul néha vissza)
-				if(counter%2==0){
-					counter++;
-					if(isFree(r.x,r.y+1)){
-						r.y++;
-					}
-					
-				}
-				else{
-					counter++;
-					if(isFree(r.x,r.y-1)){
-						r.y--;
-					}
-				
-				}
-			}
-		}
-		else if(r.x>dest.x && vertObstacle==false){
-			if(isFree(r.x-1,r.y)){
-				r.x--;
-			}
-			else{
-				if(counter%2==0){
-					counter++;
-					if(isFree(r.x,r.y+1)){
-						r.y++;
-					}
-				}
-				else{
-					counter++;
-					if(isFree(r.x,r.y-1)){
-						r.y--;
-					}
-					
-				}
-			}
-		}
-		
-			else if(r.y>dest.y){
-				if(isFree(r.x,r.y-1)){
-					r.y--;
-					vertObstacle=false;
-				}
-				else{
-					vertObstacle=true;
-					if(isFree(r.x+1,r.y)){
-						r.x++;
-					}
-					else{
-						if(isFree(r.x-1,r.y)){
-							r.x--;
-						}
-					}
-				}
-			}
-			else if (r.y<dest.y){
-				if(isFree(r.x,r.y+1)){
-					vertObstacle=false;
-					r.y++;
-				}
-				else{
-					vertObstacle=true;
-					if(counter%2==0){
-						if(isFree(r.x+1,r.y)){
-							r.x++;
-						}
-						counter++;
-					}
-					else {
-						if(isFree(r.x-1,r.y)){
-							r.x--;
-					}
-					counter++;
-					}
-				}
-			}
+		if (r.x < dest.x && isFree(r.x+1,r.y))        r.x++;
+        else if (r.x > dest.x && isFree(r.x-1,r.y))   r.x--;
+        if (r.y < dest.y && isFree(r.x,r.y+1))        r.y++;
+        else if (r.y > dest.y && isFree(r.x,r.y-1))   r.y--;
 		
 		
 		
