@@ -16,6 +16,7 @@ public class RestaurantView extends GridWorldView{
     }
 
 
+
     @Override
     public void draw(Graphics g, int x, int y, int object){
          //itt lehetne ezt is használni: super.drawObstacle(g,x,y); <- szürke négyzet
@@ -23,6 +24,7 @@ public class RestaurantView extends GridWorldView{
         switch(object){
             case RestaurantModel.TABLE1:
 			super.drawAgent(g,x,y,Color.blue,-1);
+			
                 g.setColor(Color.black);
                 drawString(g,x,y,defaultFont,"Table1");
                 break;

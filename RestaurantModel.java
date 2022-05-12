@@ -20,8 +20,8 @@ public class RestaurantModel extends GridWorldModel{
 	Location lTable5=new Location(6,6);
 	Location lTable6=new Location(5,3);
 	Location lManager=new Location(9,3);
-	Location lRobot1 = new Location(1,3);
-	Location lRobot2 = new Location(4,2);
+	Location lRobot1 = new Location(9,1);
+	Location lRobot2 = new Location(9,5);
 	
 	boolean carryingOrder=false;
 	boolean vertObstacle=false;
@@ -58,31 +58,40 @@ public class RestaurantModel extends GridWorldModel{
 			}
 			else{ //ha akadály van, kerülünk, egyszer y+ irányba, egyszer y- irányba (mert be tud akadni, ha nem fordul néha vissza)
 				if(counter%2==0){
+					counter++;
 					if(isFree(r.x,r.y+1)){
 						r.y++;
 					}
+					
+				}
+				else{
 					counter++;
+					if(isFree(r.x,r.y-1)){
+						r.y--;
+					}
+				
 				}
-				if(isFree(r.x,r.y-1)){
-					r.y--;
-				}
-				counter++;
 			}
 		}
 		else if(r.x>dest.x && vertObstacle==false){
 			if(isFree(r.x-1,r.y)){
 				r.x--;
 			}
-			if(counter%2==0){
-				if(isFree(r.x,r.y+1)){
-					r.y++;
+			else{
+				if(counter%2==0){
+					counter++;
+					if(isFree(r.x,r.y+1)){
+						r.y++;
+					}
 				}
-				counter++;
+				else{
+					counter++;
+					if(isFree(r.x,r.y-1)){
+						r.y--;
+					}
+					
+				}
 			}
-			if(isFree(r.x,r.y-1)){
-				r.y--;
-			}
-			counter++;
 		}
 		
 			else if(r.y>dest.y){

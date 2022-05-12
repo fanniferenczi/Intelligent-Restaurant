@@ -9,8 +9,16 @@ import jason.environment.grid.Location;
 public class RestaurantEnv extends Environment {
 
 
-	 public static final Literal at = Literal.parseLiteral("at(robot1,table1)");
+	 
 	  public static final Literal am = Literal.parseLiteral("at(robot1,manager)");
+	  public static final Literal at1 = Literal.parseLiteral("at(robot1,table1)");
+	  public static final Literal at2 = Literal.parseLiteral("at(robot1,table2)");
+	  public static final Literal at3 = Literal.parseLiteral("at(robot1,table3)");
+	  public static final Literal at4 = Literal.parseLiteral("at(robot1,table4)");
+	  public static final Literal at5 = Literal.parseLiteral("at(robot1,table5)");
+	  public static final Literal at6 = Literal.parseLiteral("at(robot1,table6)");
+	  public static final Literal go=Literal.parseLiteral("get(order)");
+	  public static final Literal ho=Literal.parseLiteral("hand_in(order)");
 	
 	private Logger logger = Logger.getLogger("intelligentRestaurant.mas2j."+RestaurantEnv.class.getName());
 
@@ -29,30 +37,83 @@ public class RestaurantEnv extends Environment {
 
     void updatePercepts(){
         clearPercepts("robot1");
+		clearPercepts("manager");
 		
 		// get the robot location
         Location lRobot1 = model.getAgPos(0);
 		
 		 // add agent location to its percepts
-        if (lRobot1.equals(model.lTable1)) {
-            addPercept("robot1", at);
-        }
-		  if (lRobot1.equals(model.getAgPos(2))) {
+       
+		if (lRobot1.equals(model.lManager)) {
             addPercept("robot1", am);
         }
+		 if (lRobot1.equals(model.lTable1)) {
+            addPercept("robot1", at1);
+        }
+		 if (lRobot1.equals(model.lTable2)) {
+            addPercept("robot1", at2);
+        }
+		 if (lRobot1.equals(model.lTable3)) {
+            addPercept("robot1", at3);
+        }
+		 if (lRobot1.equals(model.lTable4)) {
+            addPercept("robot1", at4);
+        }
+		 if (lRobot1.equals(model.lTable5)) {
+            addPercept("robot1", at5);
+        }
+		 if (lRobot1.equals(model.lTable6)) {
+            addPercept("robot1", at6);
+        }
+		
+		
 		
     }
 
     @Override
     public boolean executeAction(String agName, Structure action) {
-        logger.info("executing: "+action+", but not implemented!");
+        logger.info("executing: "+action);
         boolean result=false;
 		if(action.getFunctor().equals("move_towards")){
+			String l = action.getTerm(0).toString();
+			String robot=action.getTerm(1).toString();
+            Location dest = null;
+			if(l.equals("table1")){
+				dest=model.lTable1;
+			}
+			else if (l.equals("manager")){
+				dest=model.lManager;
+			}
+			else if (l.equals("robot1")){
+				dest=model.lRobot1;
+			}
+			else if (l.equals("table2")){
+				dest=model.lTable2;
+			}
+			else if (l.equals("table3")){
+				dest=model.lTable3;
+			}
+			else if (l.equals("table4")){
+				dest=model.lTable4;
+			}
+			else if (l.equals("table5")){
+				dest=model.lTable5;
+			}
+			else if (l.equals("table6")){
+				dest=model.lTable6;
+			}
 			try{
-				result=model.moveTowards(model.lTable1,0);
+				result=model.moveTowards(dest,1);
 			} catch (Exception e){
 				e.printStackTrace();
 			}
+			
+		}
+		else if(action.equals(go)){
+			result=model.getOrder();
+		}
+		else if(action.equals(ho)){
+			result=model.handInOrder();
 		}
 		
 		   if (result) {
@@ -61,6 +122,8 @@ public class RestaurantEnv extends Environment {
                 Thread.sleep(100);
             } catch (Exception e) {}
         }
+		
+		
 		return result;
 
     }
