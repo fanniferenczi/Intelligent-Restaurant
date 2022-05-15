@@ -1,4 +1,4 @@
-/*
+
 
 
 all_proposals_received(CNPId) :- 
@@ -7,8 +7,13 @@ all_proposals_received(CNPId) :-
   .count(refuse(CNPId), NR) &         // number of refusals received
   NP = NO + NR.
 
-+!serve(table1,order):true
- <-!startCNP(1,has(table1,order)).
++!serve(table1,order): true
+ 	<-!startCNP(1,has(table1,order)). 
+ 
+ +!serve(table2,order): true
+ 	<-!startCNP(2,has(table2,order)). 
+ 
+
  
 +!startCNP(Id,Task) 
 	<- .wait (2000);
@@ -42,6 +47,7 @@ all_proposals_received(CNPId) :-
       .min(L,offer(WOf,WAg)); // sort offers, the first is the best
       .print("Winner is ",WAg," with ",WOf);
       !announce_result(CNPId,L,WAg);
+	  .abolish(propose(CNPId,_));  //kéréshez tartozó ajánlatok törlése, így lehet többször is meghirdetni ezt a feladatot
       -+cnp_state(Id,finished).
 
 // nothing todo, the current phase is not 'propose'
@@ -54,6 +60,7 @@ all_proposals_received(CNPId) :-
 // announce to the winner
 +!announce_result(CNPId,[offer(O,WAg)|T],WAg) 
    <- .send(WAg,tell,accept_proposal(CNPId));
+   	  .print("elküldve");
       !announce_result(CNPId,T,WAg).
 // announce to others
 +!announce_result(CNPId,[offer(O,LAg)|T],WAg) 
@@ -61,4 +68,4 @@ all_proposals_received(CNPId) :-
       !announce_result(CNPId,T,WAg).
 	  
 	  
-	  */
+	  

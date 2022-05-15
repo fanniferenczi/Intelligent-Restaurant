@@ -16,7 +16,9 @@ public class RestaurantEnv extends Environment {
 	  public static final Literal at3 = Literal.parseLiteral("at(robot1,table3)");
 	  public static final Literal at4 = Literal.parseLiteral("at(robot1,table4)");
 	  public static final Literal at5 = Literal.parseLiteral("at(robot1,table5)");
-	  public static final Literal at6 = Literal.parseLiteral("at(robot1,table6)");
+	  public static final Literal ah1 = Literal.parseLiteral("at(robot1,home1)");
+	 
+	  
 	  
 	  public static final Literal am2 = Literal.parseLiteral("at(robot2,manager)");
 	  public static final Literal at12 = Literal.parseLiteral("at(robot2,table1)");
@@ -24,7 +26,7 @@ public class RestaurantEnv extends Environment {
 	  public static final Literal at32 = Literal.parseLiteral("at(robot2,table3)");
 	  public static final Literal at42 = Literal.parseLiteral("at(robot2,table4)");
 	  public static final Literal at52 = Literal.parseLiteral("at(robot2,table5)");
-	  public static final Literal at62 = Literal.parseLiteral("at(robot2,table6)");
+	  public static final Literal ah2 = Literal.parseLiteral("at(robot2,home2)");
 	  
 	  public static final Literal go=Literal.parseLiteral("get(order)");
 	  public static final Literal ho=Literal.parseLiteral("hand_in(order)");
@@ -50,54 +52,63 @@ public class RestaurantEnv extends Environment {
 		clearPercepts("manager");
 		
 		// get the robot location
-        Location lRobot1 = model.getAgPos(0);
-		Location lRobot2 = model.getAgPos(1);
+        Location robot1 = model.getAgPos(0);
+		Location robot2 = model.getAgPos(1);
 		
 		 // add agent location to its percepts
        
-		if (lRobot1.equals(model.lManager)) {
+		if (robot1.equals(model.lManagerDock)) {
             addPercept("robot1", am);
         }
-		 if (lRobot1.equals(model.lTable1)) {
+		 if (robot1.equals(model.lTable1Dock)) {
             addPercept("robot1", at1);
         }
-		 if (lRobot1.equals(model.lTable2)) {
+		 if (robot1.equals(model.lTable2Dock)) {
             addPercept("robot1", at2);
         }
-		 if (lRobot1.equals(model.lTable3)) {
+		 if (robot1.equals(model.lTable3Dock)) {
             addPercept("robot1", at3);
         }
-		 if (lRobot1.equals(model.lTable4)) {
+		 if (robot1.equals(model.lTable4Dock)) {
             addPercept("robot1", at4);
         }
-		 if (lRobot1.equals(model.lTable5)) {
+		 if (robot1.equals(model.lTable5Dock)) {
             addPercept("robot1", at5);
         }
-		 if (lRobot1.equals(model.lTable6)) {
-            addPercept("robot1", at6);
+		 if (robot1.equals(model.lRobot1Home)) {
+            addPercept("robot1", ah1);
+			model.busy1=false;
+			
         }
 		
-		if (lRobot2.equals(model.lManager)) {
+		
+		
+		
+		if (robot2.equals(model.lManagerDock)) {
             addPercept("robot2", am2);
         }
-		 if (lRobot2.equals(model.lTable1)) {
+		 if (robot2.equals(model.lTable1Dock)) {
             addPercept("robot2", at12);
         }
-		 if (lRobot2.equals(model.lTable2)) {
+		 if (robot2.equals(model.lTable2Dock)) {
             addPercept("robot2", at22);
         }
-		 if (lRobot2.equals(model.lTable3)) {
+		 if (robot2.equals(model.lTable3Dock)) {
             addPercept("robot2", at32);
         }
-		 if (lRobot2.equals(model.lTable4)) {
+		 if (robot2.equals(model.lTable4Dock)) {
             addPercept("robot2", at42);
         }
-		 if (lRobot2.equals(model.lTable5)) {
+		 if (robot2.equals(model.lTable5Dock)) {
             addPercept("robot2", at52);
         }
-		 if (lRobot2.equals(model.lTable6)) {
-            addPercept("robot2", at62);
+		if (robot2.equals(model.lRobot2Home)) {
+            addPercept("robot2", ah2);
+			model.busy2=false;
         }
+		
+		
+		 
 		
 		
 		
@@ -112,33 +123,36 @@ public class RestaurantEnv extends Environment {
 			String robot=action.getTerm(1).toString();
 			int nRobot=Integer.parseInt(robot);
             Location dest = null;
-			if(l.equals("table1")){
-				dest=model.lTable1;
+			Location test=new Location(4,5);
+			
+			if (l.equals("manager")){
+				dest=model.lManagerDock;
 			}
-			else if (l.equals("manager")){
-				dest=model.lManager;
-			}
-			else if (l.equals("robot1")){
-				dest=model.lRobot1;
-			}
-			else if (l.equals("robot2")){
-				dest=model.lRobot2;
-			}
+			else if(l.equals("table1")){
+				dest=model.lTable1Dock;
+			}		
 			else if (l.equals("table2")){
-				dest=model.lTable2;
+				dest=model.lTable2Dock;
 			}
 			else if (l.equals("table3")){
 				dest=model.lTable3;
 			}
 			else if (l.equals("table4")){
-				dest=model.lTable4;
+				dest=model.lTable4Dock;
 			}
 			else if (l.equals("table5")){
 				dest=model.lTable5;
 			}
-			else if (l.equals("table6")){
-				dest=model.lTable6;
+			else if (l.equals("home1")){
+				dest=model.lRobot1Home;
 			}
+			else if (l.equals("home2")){
+				dest=model.lRobot2Home;
+			}
+			
+			
+			
+			
 			try{
 				result=model.moveTowards(dest,nRobot);
 			} catch (Exception e){
@@ -146,6 +160,16 @@ public class RestaurantEnv extends Environment {
 			}
 			
 		}
+		else if(action.getFunctor().equals("get_busy")){
+			String s = action.getTerm(0).toString();
+			int id = Integer.parseInt(s);
+			try{
+				result=model.getBusy(id);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 		else if(action.equals(go)){
 			result=model.getOrder();
 		}

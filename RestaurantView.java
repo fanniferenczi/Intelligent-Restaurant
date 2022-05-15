@@ -18,61 +18,59 @@ public class RestaurantView extends GridWorldView{
 
 
     @Override
-    public void draw(Graphics g, int x, int y, int object){
-         //itt lehetne ezt is használni: super.drawObstacle(g,x,y); <- szürke négyzet
+    public void draw(Graphics g, int x, int y, int object){ 
+         
 											
         switch(object){
-            case RestaurantModel.TABLE1:
-			super.drawAgent(g,x,y,Color.blue,-1);
+            case RestaurantModel.TABLE1DOCK:
 			
-                g.setColor(Color.black);
-                drawString(g,x,y,defaultFont,"Table1");
+			super.drawObstacle(g,x,y);
+			
+				
                 break;
-            case RestaurantModel.TABLE2:
-			super.drawAgent(g,x,y,Color.blue,-1);
-                g.setColor(Color.black);
-                drawString(g,x,y,defaultFont,"Table2");
+            case RestaurantModel.TABLE2DOCK:
+				super.drawObstacle(g,x,y);
                 break;
-			case RestaurantModel.TABLE3:
-			super.drawAgent(g,x,y,Color.blue,-1);
-                g.setColor(Color.black);
-                drawString(g,x,y,defaultFont,"Table3");
+			case RestaurantModel.TABLE3DOCK:
+				super.drawObstacle(g,x,y);
                 break;
-			case RestaurantModel.TABLE4:
-			super.drawAgent(g,x,y,Color.blue,-1);
-                g.setColor(Color.black);
-                drawString(g,x,y,defaultFont,"Table4");
+			case RestaurantModel.TABLE4DOCK:
+				super.drawObstacle(g,x,y);
                 break;
-			case RestaurantModel.TABLE5:
-			super.drawAgent(g,x,y,Color.blue,-1);
-                g.setColor(Color.black);
-                drawString(g,x,y,defaultFont,"Table5");
+			case RestaurantModel.TABLE5DOCK:
+				super.drawObstacle(g,x,y);
                 break;
-			case RestaurantModel.TABLE6:
-			super.drawAgent(g,x,y,Color.blue,-1);
-                g.setColor(Color.black);
-                drawString(g,x,y,defaultFont,"Table6");
+			case RestaurantModel.MANAGERDOCK:
+				super.drawObstacle(g,x,y);
                 break;
-			case RestaurantModel.MANAGER:
-				super.drawAgent(g,x,y,Color.red,-1);
-				g.setColor(Color.black);
-				drawString(g,x,y,defaultFont,"Manager");
-                break;
+	
         }
-        repaint();
+       // repaint();  //ez okozta a villódzást
     }
     @Override
     public void drawAgent(Graphics g, int x, int y, Color c, int id){
 		String label="label";
 		c= Color.yellow;
-		if(id==2){
-			label="Meneger";
-			c=Color.red;
+		
+		switch(id){
+			case 0:
+				label="Robot1";
+				c=Color.yellow;
+				break;
+			case 1:
+				label="Robot2";
+				c=Color.yellow;
+				break;
+			case 2:
+				label="Meneger";
+				c=Color.red;
+				break;
+			default:
+				label="Table"+(id-2);
+				c=Color.blue;
+				
 		}
-		else
-		{
-			label="Robot"+(id+1);
-		}
+		
         super.drawAgent(g,x,y,c,-1);
         g.setColor(Color.black);
         super.drawString(g, x, y, defaultFont, label);
