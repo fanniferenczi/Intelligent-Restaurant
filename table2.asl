@@ -1,5 +1,5 @@
 !get(order).
 +!get(order):true 
-	<-/* .wait(5000);
-		.send(manager, achieve, serve(table2,order)).*/
+	<- .wait(500);
+		.send(manager, achieve, serve(table2,order)).
 		

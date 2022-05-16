@@ -13,18 +13,71 @@ plays(initiator,manager).
 
 // answer to Call For Proposal   
 @c1 +cfp(CNPId,Task)[source(A)]
-   :  plays(initiator,A) & price(Task,Offer)
-   <- /*if(at(robot2,home2)){
-			.print("robot2 is at home");
-			Offer=200;
+   :  plays(initiator,A)// & price(Task,Offer)
+   <- if(at(robot2,home2)){
+   
+   
+			if(Task==has(table1,order)){
+				.findall(price(D),distance(robot2,table1,D),L);
+				L \== [];
+				.min(L,price(Dist));
+				Offer=Dist;
+				.print("robot1 kitalálta, most küldi");
+				+proposal(CNPId,Task,Offer); // remember my proposal
+				.send(A,tell,propose(CNPId,Offer));
+			}
+			
+			if(Task==has(table2,order)){
+				.findall(price(D),distance(robot2,table2,D),L);
+				L \== [];
+				.min(L,price(Dist));
+				Offer=Dist;
+				.print("robot1 kitalálta, most küldi");
+				+proposal(CNPId,Task,Offer); // remember my proposal
+				.send(A,tell,propose(CNPId,Offer));
+			}
+			
+			if(Task==has(table3,order)){
+				.findall(price(D),distance(robot2,table3,D),L);
+				L \== [];
+				.min(L,price(Dist));
+				Offer=Dist;
+				.print("robot1 kitalálta, most küldi");
+				+proposal(CNPId,Task,Offer); // remember my proposal
+				.send(A,tell,propose(CNPId,Offer));
+			}
+			
+			if(Task==has(table4,order)){
+				.findall(price(D),distance(robot2,table4,D),L);
+				L \== [];
+				.min(L,price(Dist));
+				Offer=Dist;
+				.print("robot1 kitalálta, most küldi");
+				+proposal(CNPId,Task,Offer); // remember my proposal
+				.send(A,tell,propose(CNPId,Offer));
+			}
+			
+			if(Task==has(table5,order)){
+				.findall(price(D),distance(robot2,table5,D),L);
+				L \== [];
+				.min(L,price(Dist));
+				Offer=Dist;
+				.print("robot1 kitalálta, most küldi");
+				+proposal(CNPId,Task,Offer); // remember my proposal
+				.send(A,tell,propose(CNPId,Offer));
+			}
+			
+			
+			
+			
 		}
 		else{
-			.print("robot2 is not at home");
-			Offer=200;
-		}*/
-		.print("robot2 kitalálta, most küldi");
-   		+proposal(CNPId,Task,Offer); // remember my proposal
-      .send(A,tell,propose(CNPId,Offer)).
+			.send(A,tell,refuse(CNPId));
+			 -cfp(CNPId,Task)[source(A)];
+	         -proposal(CNPId,_,_); // clear memory
+		}.
+		
+		
 
 @r1 +accept_proposal(CNPId)
    :  proposal(CNPId,Task,Offer)

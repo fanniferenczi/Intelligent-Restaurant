@@ -24,7 +24,6 @@ public class RestaurantModel extends GridWorldModel{
 	Location lTable3=new Location(0,3);
 	Location lTable4=new Location(2,5);
 	Location lTable5=new Location(6,6);
-	//Location lTable6=new Location(5,3);
 	
 	Location lManager=new Location(9,3);
 	Location lRobot1 = new Location(8,1);
@@ -44,8 +43,6 @@ public class RestaurantModel extends GridWorldModel{
 	
 	
 	boolean carryingOrder=false;
-	boolean busy1=false;
-	boolean busy2=false;
 	
 	private Logger logger = Logger.getLogger("intelligentRestaurant.mas2j."+RestaurantModel.class.getName());
 
@@ -79,14 +76,9 @@ public class RestaurantModel extends GridWorldModel{
 		
 		
 		int dist=r.distance(dest);
-		logger.info("rNumber: "+rId+" distance: "+dist);
+		//logger.info("rNumber: "+rId+" distance: "+dist);
 		
-		if(rId==0){
-			busy1=true;
-		}
-		else{
-			busy2=true;
-		}
+	
 		
 		
 		if (r.x < dest.x && isFree(r.x+1,r.y))   {
@@ -102,8 +94,10 @@ public class RestaurantModel extends GridWorldModel{
 			r.y--;
 		}
 		
-		logger.info("busy1: "+busy1);
+		
 		setAgPos(rId,r); //move the robot in the grid
+		Literal hello = Literal.parseLiteral("say_hello(hello)");
+		
 		
 		/*if(view!=null){
 			view.update(lManager.x,lManager.y);
@@ -112,22 +106,56 @@ public class RestaurantModel extends GridWorldModel{
 		return true;
 	}
 
-	boolean getOrder(){  //egyelõre nem csinál sok mindent
+	boolean getOrder(){
 		carryingOrder=true;
 		return true;
 	}
-	boolean handInOrder(){  //szintén
+	boolean handInOrder(){
 		carryingOrder=false;
 		return true;
 	}
-	boolean getBusy(int rId){
-		if(rId==0){
-			return busy1;
+	
+	int getDistance(int table, int robotId){
+		int result=0;
+		if(robotId==0){
+			switch (table){
+				case 1:
+					result= lRobot1.distance(lTable1Dock);
+					break;
+				case 2:
+					result= lRobot1.distance(lTable2Dock);
+					break;
+				case 3:
+					result= lRobot1.distance(lTable3Dock);
+					break;
+				case 4:
+					result= lRobot1.distance(lTable4Dock);
+					break;
+				case 5:
+					result= lRobot1.distance(lTable5Dock);
+					break;
+			}	
 		}
 		else{
-			return busy2;
+			switch (table){
+				case 1:
+					result= lRobot2.distance(lTable1Dock);
+					break;
+				case 2:
+					result= lRobot2.distance(lTable2Dock);
+					break;
+				case 3:
+					result= lRobot2.distance(lTable3Dock);
+					break;
+				case 4:
+					result= lRobot2.distance(lTable4Dock);
+					break;
+				case 5:
+					result= lRobot2.distance(lTable5Dock);
+					break;
+			}
 		}
-		
+		return result;
 	}
 
 

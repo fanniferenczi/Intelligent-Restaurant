@@ -30,6 +30,9 @@ public class RestaurantEnv extends Environment {
 	  
 	  public static final Literal go=Literal.parseLiteral("get(order)");
 	  public static final Literal ho=Literal.parseLiteral("hand_in(order)");
+	  
+	  
+	  
 	
 	private Logger logger = Logger.getLogger("intelligentRestaurant.mas2j."+RestaurantEnv.class.getName());
 
@@ -77,7 +80,27 @@ public class RestaurantEnv extends Environment {
         }
 		 if (robot1.equals(model.lRobot1Home)) {
             addPercept("robot1", ah1);
-			model.busy1=false;
+			int dist=0; 
+			
+			dist=model.lRobot1Home.distance(model.lTable1Dock);
+			Literal dt1 = Literal.parseLiteral("distance(robot1,table1,"+dist+")");
+			addPercept("robot1",dt1);
+			
+			dist=model.lRobot1Home.distance(model.lTable2Dock);
+			Literal dt2 = Literal.parseLiteral("distance(robot1,table2,"+dist+")");
+			addPercept("robot1",dt2);
+			
+			dist=model.lRobot1Home.distance(model.lTable3Dock);
+			Literal dt3 = Literal.parseLiteral("distance(robot1,table3,"+dist+")");
+			addPercept("robot1",dt3);
+			
+			dist=model.lRobot1Home.distance(model.lTable4Dock);
+			Literal dt4 = Literal.parseLiteral("distance(robot1,table4,"+dist+")");
+			addPercept("robot1",dt4);
+			
+			dist=model.lRobot1Home.distance(model.lTable5Dock);
+			Literal dt5 = Literal.parseLiteral("distance(robot1,table5,"+dist+")");
+			addPercept("robot1",dt5);
 			
         }
 		
@@ -104,7 +127,27 @@ public class RestaurantEnv extends Environment {
         }
 		if (robot2.equals(model.lRobot2Home)) {
             addPercept("robot2", ah2);
-			model.busy2=false;
+			int dist=0; 
+			
+			dist=model.lRobot2Home.distance(model.lTable1Dock);
+			Literal dt12 = Literal.parseLiteral("distance(robot2,table1,"+dist+")");
+			addPercept("robot2",dt12);
+			
+			dist=model.lRobot2Home.distance(model.lTable2Dock);
+			Literal dt22 = Literal.parseLiteral("distance(robot2,table2,"+dist+")");
+			addPercept("robot2",dt22);
+			
+			dist=model.lRobot2Home.distance(model.lTable3Dock);
+			Literal dt32 = Literal.parseLiteral("distance(robot2,table3,"+dist+")");
+			addPercept("robot2",dt32);
+			
+			dist=model.lRobot2Home.distance(model.lTable4Dock);
+			Literal dt42 = Literal.parseLiteral("distance(robot2,table4,"+dist+")");
+			addPercept("robot2",dt42);
+			
+			dist=model.lRobot2Home.distance(model.lTable5Dock);
+			Literal dt52 = Literal.parseLiteral("distance(robot2,table5,"+dist+")");
+			addPercept("robot2",dt52);
         }
 		
 		
@@ -116,14 +159,14 @@ public class RestaurantEnv extends Environment {
 
     @Override
     public boolean executeAction(String agName, Structure action) {
-        logger.info("executing: "+action);
+       // logger.info("executing: "+action);
         boolean result=false;
 		if(action.getFunctor().equals("move_towards")){
 			String l = action.getTerm(0).toString();
 			String robot=action.getTerm(1).toString();
-			int nRobot=Integer.parseInt(robot);
+			int robotId=Integer.parseInt(robot);
             Location dest = null;
-			Location test=new Location(4,5);
+			
 			
 			if (l.equals("manager")){
 				dest=model.lManagerDock;
@@ -135,13 +178,13 @@ public class RestaurantEnv extends Environment {
 				dest=model.lTable2Dock;
 			}
 			else if (l.equals("table3")){
-				dest=model.lTable3;
+				dest=model.lTable3Dock;
 			}
 			else if (l.equals("table4")){
 				dest=model.lTable4Dock;
 			}
 			else if (l.equals("table5")){
-				dest=model.lTable5;
+				dest=model.lTable5Dock;
 			}
 			else if (l.equals("home1")){
 				dest=model.lRobot1Home;
@@ -154,21 +197,15 @@ public class RestaurantEnv extends Environment {
 			
 			
 			try{
-				result=model.moveTowards(dest,nRobot);
+				result=model.moveTowards(dest,robotId);
 			} catch (Exception e){
 				e.printStackTrace();
 			}
 			
 		}
-		else if(action.getFunctor().equals("get_busy")){
-			String s = action.getTerm(0).toString();
-			int id = Integer.parseInt(s);
-			try{
-				result=model.getBusy(id);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
+		
+		
+		
 		
 		else if(action.equals(go)){
 			result=model.getOrder();
