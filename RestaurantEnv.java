@@ -5,11 +5,8 @@ import jason.asSyntax.parser.*;
 import java.util.logging.*;
 import jason.environment.grid.Location;
 
-
 public class RestaurantEnv extends Environment {
-
-
-	 
+	
 	  public static final Literal am = Literal.parseLiteral("at(robot1,manager)");
 	  public static final Literal at1 = Literal.parseLiteral("at(robot1,table1)");
 	  public static final Literal at2 = Literal.parseLiteral("at(robot1,table2)");
@@ -18,8 +15,6 @@ public class RestaurantEnv extends Environment {
 	  public static final Literal at5 = Literal.parseLiteral("at(robot1,table5)");
 	  public static final Literal ah1 = Literal.parseLiteral("at(robot1,home1)");
 	 
-	  
-	  
 	  public static final Literal am2 = Literal.parseLiteral("at(robot2,manager)");
 	  public static final Literal at12 = Literal.parseLiteral("at(robot2,table1)");
 	  public static final Literal at22= Literal.parseLiteral("at(robot2,table2)");
@@ -29,11 +24,7 @@ public class RestaurantEnv extends Environment {
 	  public static final Literal ah2 = Literal.parseLiteral("at(robot2,home2)");
 	  
 	  public static final Literal go=Literal.parseLiteral("get(order)");
-	  public static final Literal ho=Literal.parseLiteral("hand_in(order)");
 	  
-	  
-	  
-	
 	private Logger logger = Logger.getLogger("intelligentRestaurant.mas2j."+RestaurantEnv.class.getName());
 
     RestaurantModel model;  //model of the grid
@@ -41,14 +32,12 @@ public class RestaurantEnv extends Environment {
     @Override
     public void init(String[] args) {
         model = new RestaurantModel();
-
         if (args.length == 1 && args[0].equals("gui")) {
             RestaurantView view  = new RestaurantView(model);
             model.setView(view);
         }
         updatePercepts();
     }
-
     void updatePercepts(){
         clearPercepts("robot1");
 		clearPercepts("robot2");
@@ -59,7 +48,6 @@ public class RestaurantEnv extends Environment {
 		Location robot2 = model.getAgPos(1);
 		
 		 // add agent location to its percepts
-       
 		if (robot1.equals(model.lManagerDock)) {
             addPercept("robot1", am);
         }
@@ -101,10 +89,7 @@ public class RestaurantEnv extends Environment {
 			dist=model.lRobot1Home.distance(model.lTable5Dock);
 			Literal dt5 = Literal.parseLiteral("distance(robot1,table5,"+dist+")");
 			addPercept("robot1",dt5);
-			
         }
-		
-		
 		
 		
 		if (robot2.equals(model.lManagerDock)) {
@@ -148,25 +133,18 @@ public class RestaurantEnv extends Environment {
 			dist=model.lRobot2Home.distance(model.lTable5Dock);
 			Literal dt52 = Literal.parseLiteral("distance(robot2,table5,"+dist+")");
 			addPercept("robot2",dt52);
-        }
-		
-		
-		 
-		
-		
-		
+        }	
     }
-
     @Override
     public boolean executeAction(String agName, Structure action) {
        // logger.info("executing: "+action);
         boolean result=false;
+		
 		if(action.getFunctor().equals("move_towards")){
 			String l = action.getTerm(0).toString();
 			String robot=action.getTerm(1).toString();
 			int robotId=Integer.parseInt(robot);
             Location dest = null;
-			
 			
 			if (l.equals("manager")){
 				dest=model.lManagerDock;
@@ -192,49 +170,78 @@ public class RestaurantEnv extends Environment {
 			else if (l.equals("home2")){
 				dest=model.lRobot2Home;
 			}
-			
-			
-			
-			
 			try{
 				result=model.moveTowards(dest,robotId);
 			} catch (Exception e){
 				e.printStackTrace();
 			}
-			
 		}
-		
-		
-		
-		
 		else if(action.equals(go)){
 			result=model.getOrder();
 		}
-		else if(action.equals(ho)){
-			result=model.handInOrder();
-		}
 		
+		else if(action.getFunctor().equals("hand_in")){
+			String table = action.getTerm(0).toString();
+			int tableId=0;
+			switch (table){
+				case "table1":
+					tableId=0;
+					break;
+				case "table2":
+					tableId=1;
+					break;
+				case "table3":
+					tableId=2;
+					break;
+				case "table4":
+					tableId=3;
+					break;
+				case "table5":
+					tableId=4;
+					break;
+			}
+			try{
+				result=model.handInOrder(tableId);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			
+		}
+		else if(action.getFunctor().equals("pay")){
+			String table = action.getTerm(0).toString();
+			int tableId=0;
+			switch (table){
+				case "table1":
+					tableId=0;
+					break;
+				case "table2":
+					tableId=1;
+					break;
+				case "table3":
+					tableId=2;
+					break;
+				case "table4":
+					tableId=3;
+					break;
+				case "table5":
+					tableId=4;
+					break;
+			}
+			try{
+				result=model.pay(tableId);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			
+		}
 		   if (result) {
             updatePercepts();
             try {
                 Thread.sleep(100);
             } catch (Exception e) {}
         }
-		
-		
 		return result;
-
     }
-
-
-
-    /** Called before the end of MAS execution
-
-    @Override
-    public void stop() {
-        super.stop();
-    }  */
-
 }
 
 

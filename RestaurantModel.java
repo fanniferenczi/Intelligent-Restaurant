@@ -14,8 +14,6 @@ public class RestaurantModel extends GridWorldModel{
 	public static final int TABLE5DOCK=128;
 	public static final int MANAGERDOCK=256;
 	
-	
-	
     public static final int GSizeX=10;
     public static final int GSizeY=7;
 
@@ -26,9 +24,8 @@ public class RestaurantModel extends GridWorldModel{
 	Location lTable5=new Location(6,6);
 	
 	Location lManager=new Location(9,3);
-	Location lRobot1 = new Location(8,1);
-	Location lRobot2 = new Location(8,5);
-	
+	Location lRobot1Home=new Location(8,1);
+	Location lRobot2Home=new Location(8,5);
 	
 	Location lTable1Dock=new Location(lTable1.x+1,lTable1.y);
 	Location lTable2Dock=new Location(lTable2.x+1,lTable2.y);
@@ -36,28 +33,23 @@ public class RestaurantModel extends GridWorldModel{
 	Location lTable4Dock=new Location(lTable4.x+1,lTable4.y);
 	Location lTable5Dock=new Location(lTable5.x+1,lTable5.y);
 	Location lManagerDock=new Location(lManager.x-1,lManager.y);
-	Location lRobot1Home=new Location(8,1);
-	Location lRobot2Home=new Location(8,5);
-	
-	
-	
 	
 	boolean carryingOrder=false;
+	int tableOrders[]={0,0,0,0,0};
 	
 	private Logger logger = Logger.getLogger("intelligentRestaurant.mas2j."+RestaurantModel.class.getName());
 
     public RestaurantModel(){
         super(GSizeX,GSizeY,8);
-        setAgPos(0, lRobot1);
-		setAgPos(1, lRobot2);
-		setAgPos(2, lManager);
+        setAgPos(0,lRobot1Home);
+		setAgPos(1,lRobot2Home);
+		setAgPos(2,lManager);
 		
 		setAgPos(3,lTable1);
 		setAgPos(4,lTable2);
-		setAgPos(5, lTable3);
-		setAgPos(6, lTable4);
-		setAgPos(7, lTable5);
-		
+		setAgPos(5,lTable3);
+		setAgPos(6,lTable4);
+		setAgPos(7,lTable5);
 		
         add(TABLE1DOCK,lTable1Dock);
         add(TABLE2DOCK,lTable2Dock);
@@ -65,22 +57,10 @@ public class RestaurantModel extends GridWorldModel{
 		add(TABLE4DOCK,lTable4Dock);
 		add(TABLE5DOCK,lTable5Dock);
 		add(MANAGERDOCK,lManagerDock);
-	
-		
-		
     }
 	
 	boolean moveTowards(Location dest, int rId){
-		
-		Location r=getAgPos(rId); //rNumber a robotot azonosítja, annak kell az aktuális pozíciója
-		
-		
-		int dist=r.distance(dest);
-		//logger.info("rNumber: "+rId+" distance: "+dist);
-		
-	
-		
-		
+		Location r=getAgPos(rId); 
 		if (r.x < dest.x && isFree(r.x+1,r.y))   {
 			r.x++;
 		}
@@ -93,16 +73,7 @@ public class RestaurantModel extends GridWorldModel{
         else if (r.y > dest.y && isFree(r.x,r.y-1)) {
 			r.y--;
 		}
-		
-		
 		setAgPos(rId,r); //move the robot in the grid
-		Literal hello = Literal.parseLiteral("say_hello(hello)");
-		
-		
-		/*if(view!=null){
-			view.update(lManager.x,lManager.y);
-		}*/
-		
 		return true;
 	}
 
@@ -110,53 +81,17 @@ public class RestaurantModel extends GridWorldModel{
 		carryingOrder=true;
 		return true;
 	}
-	boolean handInOrder(){
+	
+	boolean handInOrder(int tableId){
 		carryingOrder=false;
+		tableOrders[tableId]=tableOrders[tableId]+1;
+		logger.info("Table"+(tableId+1)+" has "+tableOrders[tableId]+" order(s).");
 		return true;
 	}
 	
-	int getDistance(int table, int robotId){
-		int result=0;
-		if(robotId==0){
-			switch (table){
-				case 1:
-					result= lRobot1.distance(lTable1Dock);
-					break;
-				case 2:
-					result= lRobot1.distance(lTable2Dock);
-					break;
-				case 3:
-					result= lRobot1.distance(lTable3Dock);
-					break;
-				case 4:
-					result= lRobot1.distance(lTable4Dock);
-					break;
-				case 5:
-					result= lRobot1.distance(lTable5Dock);
-					break;
-			}	
-		}
-		else{
-			switch (table){
-				case 1:
-					result= lRobot2.distance(lTable1Dock);
-					break;
-				case 2:
-					result= lRobot2.distance(lTable2Dock);
-					break;
-				case 3:
-					result= lRobot2.distance(lTable3Dock);
-					break;
-				case 4:
-					result= lRobot2.distance(lTable4Dock);
-					break;
-				case 5:
-					result= lRobot2.distance(lTable5Dock);
-					break;
-			}
-		}
-		return result;
+	boolean pay(int tableId){
+		tableOrders[tableId]=0;
+		logger.info("Table"+(tableId+1)+" has paid.");
+		return true;
 	}
-
-
 }

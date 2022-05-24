@@ -1,6 +1,4 @@
 
-
-
 all_proposals_received(CNPId) :- 
   .count(introduction(participant,_),NP) & // number of participants
   .count(propose(CNPId,_), NO) &      // number of proposes received
@@ -25,30 +23,26 @@ all_proposals_received(CNPId) :-
 
  
 +!startCNP(Id,Task) 
-	<- .wait (2000);
+	<- .wait (1000);
 	 +cnp_state(Id,propose); 
 	 .findall(Name,introduction(participant,Name),LP);
 	 .print("Sending CFP to ",LP);
      .send(LP,tell,cfp(Id,Task));
      .concat("+!contract(",Id,")",Event);
-	 .at("now +2 seconds", Event).
+	 .at("now +1 seconds", Event).
 
 // receive proposal 
-@r1 +propose(CNPId,Offer)
-   :  cnp_state(CNPId,propose) & all_proposals_received(CNPId)
+@r1 +propose(CNPId,Offer): cnp_state(CNPId,propose) & all_proposals_received(CNPId)
    <- !contract(CNPId).
    
 // receive refusals   
-@r2 +refuse(CNPId) 
-   :  cnp_state(CNPId,propose) & all_proposals_received(CNPId)
+@r2 +refuse(CNPId): cnp_state(CNPId,propose) & all_proposals_received(CNPId)
    <- !contract(CNPId).
   
    
- // this plan needs to be atomic so as not to accept
-// proposals or refusals while contracting
+ // this plan needs to be atomic so as not to accept proposals or refusals while contracting
 @lc1[atomic]
-+!contract(CNPId)
-   :  cnp_state(CNPId,propose)
++!contract(CNPId):cnp_state(CNPId,propose)
    <- -+cnp_state(CNPId,contract);
       .findall(offer(O,A),propose(CNPId,O)[source(A)],L);
       .print("Offers in " , CNPId ," are ",L);
@@ -66,7 +60,6 @@ all_proposals_received(CNPId) :-
 -!contract(CNPId)
    <- .print("CNP ",CNPId," has failed!");
    	.print("try again after a few sec");
-	//.abolish(contract(CNPId));
 	.abolish(propose(CNPId,_));
 	.wait(2000);
 	if(CNPId==1){
@@ -86,11 +79,13 @@ all_proposals_received(CNPId) :-
 	}.
 
 +!announce_result(_,[],_).
+
 // announce to the winner
 +!announce_result(CNPId,[offer(O,WAg)|T],WAg) 
    <- .send(WAg,tell,accept_proposal(CNPId));
-   	  .print("elküldve");
+   	  .print("Task has been sent.");
       !announce_result(CNPId,T,WAg).
+
 // announce to others
 +!announce_result(CNPId,[offer(O,LAg)|T],WAg) 
    <- .send(LAg,tell,reject_proposal(CNPId));
